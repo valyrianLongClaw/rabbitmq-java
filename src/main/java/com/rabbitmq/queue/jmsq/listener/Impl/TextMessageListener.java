@@ -5,12 +5,8 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.stereotype.Service;
 
-@Service
-public class NormalMessageListener implements CoreMessageListener {
-
-    /*public void receiveMessage(String message) {
-        System.out.println("Message received: " + message);
-    }*/
+@Service(value = "textMessageListener")
+public class TextMessageListener implements CoreMessageListener {
 
     @Override
     public void onMessage(Message message) {

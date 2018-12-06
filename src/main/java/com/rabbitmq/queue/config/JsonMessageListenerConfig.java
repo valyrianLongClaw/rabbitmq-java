@@ -1,5 +1,6 @@
 package com.rabbitmq.queue.config;
 
+import com.rabbitmq.queue.jmsq.listener.CoreMessageListener;
 import com.rabbitmq.queue.jmsq.listener.Impl.JsonMessageListener;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -18,28 +19,20 @@ public class JsonMessageListenerConfig {
     private static final String JSON_MESSAGE_QUEUE = "jsonMessageQueue";
     public static final String JSON_ROUTING_KEY = "jsonRoutingKey";
 
-    @Bean
+    @Bean(value = "jsonMessageQueue")
     public Queue jsonMessageQueue() {
         return new Queue(JSON_MESSAGE_QUEUE, true);
     }
 
     @Bean
-    public MessageListenerAdapter jsonListenerAdapter(JsonMessageListener jsonMessageListener) {
-        return new MessageListenerAdapter(jsonMessageListener, "receiveMessage");
-    }
-
-    @Bean(name = "jsonListenerAdapter")
     public Binding jsonQueueBinding(Queue jsonMessageQueue, TopicExchange topicExchange) {
         return BindingBuilder.bind(jsonMessageQueue).to(topicExchange).with(JSON_ROUTING_KEY);
     }
 
     @Bean
-    SimpleMessageListenerContainer jsonMessagingContainer(ConnectionFactory connectionFactory,
-                                             @Qualifier(value = "jsonListenerAdapter") MessageListenerAdapter jsonListenerAdapter) {
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueueNames(JSON_MESSAGE_QUEUE);
-        container.setMessageListener(jsonListenerAdapter);
-        return container;
+    SimpleMessageListenerContainer jsonMessagingContainer(@Qualifier(value = "jsonMessageListener") CoreMessageListener jsonMessageListener,
+                                                          @Qualifier(value = "jsonMessageQueue") Queue jsonMessageQueue) {
+
+        return RabbitMqConfig.getListenerContainer(jsonMessageListener, jsonMessageQueue);
     }
 }

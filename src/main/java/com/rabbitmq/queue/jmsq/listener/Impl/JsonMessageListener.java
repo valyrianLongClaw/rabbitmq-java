@@ -8,7 +8,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.utils.SerializationUtils;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service(value = "jsonMessageListener")
 public class JsonMessageListener implements CoreMessageListener {
 
     Logger logger = LoggerFactory.getLogger(JsonMessageListener.class);

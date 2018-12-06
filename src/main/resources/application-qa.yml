@@ -1,0 +1,7 @@
+spring:
+  rabbitmq:
+    template:
+      exchange: rabbitmq-test-exchange
+rabbitmq-queues:
+  message-queue: messaging-queue
+  user-queue: user-queue
