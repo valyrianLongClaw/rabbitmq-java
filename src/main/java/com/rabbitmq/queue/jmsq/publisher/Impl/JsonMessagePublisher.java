@@ -2,16 +2,12 @@ package com.rabbitmq.queue.jmsq.publisher.Impl;
 
 import com.rabbitmq.queue.config.JsonMessageListenerConfig;
 import com.rabbitmq.queue.config.RabbitMqConfig;
-import com.rabbitmq.queue.dto.SimplePojo;
 import com.rabbitmq.queue.jmsq.publisher.CoreMessagePublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpConnectException;
-import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessagePostProcessor;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -22,9 +18,8 @@ import java.util.TimerTask;
 @Service
 public class JsonMessagePublisher implements CoreMessagePublisher {
 
-    private AmqpTemplate rabbitTemplate;
-
     Logger logger = LoggerFactory.getLogger(JsonMessagePublisher.class);
+    private AmqpTemplate rabbitTemplate;
 
     @Autowired
     public JsonMessagePublisher(@Qualifier(value = "jsonRabbitTemplate") AmqpTemplate rabbitTemplate) {

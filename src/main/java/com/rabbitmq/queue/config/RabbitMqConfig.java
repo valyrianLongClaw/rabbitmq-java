@@ -6,7 +6,6 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,17 +19,27 @@ public class RabbitMqConfig {
 
     private static ConnectionFactory connectionFactory;
 
-    @Autowired
-    public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
-
     public RabbitMqConfig() {
     }
 
     @Autowired
     public RabbitMqConfig(@Value("${spring.rabbitmq.template.exchange}") String topicExchange) {
         TOPIC_EXCHANGE_NAME = topicExchange;
+    }
+
+    public static SimpleMessageListenerContainer getListenerContainer(CoreMessageListener messageListener,
+                                                                      Queue queue) {
+
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueues(queue);
+        container.setMessageListener(messageListener);
+        return container;
+    }
+
+    @Autowired
+    public void setConnectionFactory(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
     }
 
     @Bean
@@ -53,15 +62,5 @@ public class RabbitMqConfig {
     @Bean
     public Jackson2JsonMessageConverter producerJackson2MessageConverter() {
         return new Jackson2JsonMessageConverter();
-    }
-
-    public static SimpleMessageListenerContainer getListenerContainer(CoreMessageListener messageListener,
-                                                                      Queue queue) {
-
-        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.setQueues(queue);
-        container.setMessageListener(messageListener);
-        return container;
     }
 }

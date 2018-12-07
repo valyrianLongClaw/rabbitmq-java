@@ -15,9 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class NormalMessagePublisher implements CoreMessagePublisher {
 
-    private AmqpTemplate rabbitTemplate;
-
     Logger logger = LoggerFactory.getLogger(NormalMessagePublisher.class);
+    private AmqpTemplate rabbitTemplate;
 
     @Autowired
     public NormalMessagePublisher(@Qualifier(value = "textRabbitTemplate") AmqpTemplate rabbitTemplate) {

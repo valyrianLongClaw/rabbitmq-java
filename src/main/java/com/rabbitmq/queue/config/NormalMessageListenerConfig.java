@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class NormalMessageListenerConfig {
 
-    private static final String TEXT_MESSAGE_QUEUE = "textMessageQueue";
     public static final String TEXT_MESSAGE_ROUTING_KEY = "textMessageRoutingKey";
+    private static final String TEXT_MESSAGE_QUEUE = "textMessageQueue";
 
     @Bean(name = "textMessageQueue")
     public Queue textMessageQueue() {
